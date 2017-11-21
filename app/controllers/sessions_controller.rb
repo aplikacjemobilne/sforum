@@ -1,21 +1,44 @@
 class SessionsController < ApplicationController
-  def new
-  end
+  skip_before_action :verify_authenticity_token
+  def new; end
 
   def create
-    student = Student.find_by(index: params[:session][:index])
-    if student && student.authenticate(params[:session][:password])
-      # Wszystko dobrze, logujemy
-      log_in student
-      redirect_to student
-    else
-      # Niedobrze
-      render 'new'
+    respond_to do |format|
+      student = Student.find_by(index: params[:session][:index])
+      if student && student.authenticate(params[:session][:password])
+        format.html do
+          log_in student
+          redirect_to student
+        end
+        format.json do
+          student.password = params[:session][:password]
+          student.regenerate_token
+          render json: { token: student.token }
+        end
+      else
+        format.html do
+          render 'new'
+        end
+        format.json do
+          render json: { message: 'Niepoprawne dane' }
+        end
+      end
     end
-  end
+ end
 
   def destroy
-    log_out
-    redirect_to root_url
+    respond_to do |format|
+      format.html do
+        log_out
+        redirect_to root_url
+      end
+      format.json do
+        require_token
+        if current_student
+          current_student.invalidate_token
+          head :ok
+        end
+      end
+    end
   end
 end

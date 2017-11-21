@@ -1,0 +1,15 @@
+<ul>
+<% for course in current_student.courses do %>
+  <li><%= course.name %></li>
+  <ul>
+  <% for topic in course.topics do %>
+    <li><%= topic.title %></li>
+    <ul>
+      <% for post in topic.posts %>
+        <li><%= post.body %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  </ul>
+<% end %>
+</ul>
