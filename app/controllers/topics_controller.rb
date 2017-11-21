@@ -4,14 +4,14 @@ class TopicsController < ApplicationController
   before_action :require_token, only: [:create]
   swagger_controller :topics, 'Topics'
 
-  # GET /topics
-  # GET /topics.json
-  def index
-    @topics = Topic.all
-  end
-
   # GET /topics/1
   # GET /topics/1.json
+  swagger_api :show do
+    summary 'Returns one topic'
+    param :path, :course_id, :integer, :required, "Course id"
+    param :path, :id, :integer, :required, "Topic id"
+    notes 'Notes...'
+  end
   def show
   end
 
@@ -51,11 +51,17 @@ class TopicsController < ApplicationController
 
   # PATCH/PUT /topics/1
   # PATCH/PUT /topics/1.json
+  swagger_api :update do
+    summary "Update a topic"
+    param :path, :id, :integer, :required, "Topic id"
+    param :path, :course_id, :integer, :required, "Course id"
+    param :form, "topic[title]", :string, :required, "Topic title"
+  end
   def update
     respond_to do |format|
       if @topic.update(topic_params)
         format.html { redirect_to [@course, @topic], notice: 'Topic was successfully updated.' }
-        format.json { render :show, status: :ok, location: @topic }
+        format.json { render :show, status: :ok }
       else
         format.html { render :edit }
         format.json { render json: @topic.errors, status: :unprocessable_entity }
@@ -65,6 +71,12 @@ class TopicsController < ApplicationController
 
   # DELETE /topics/1
   # DELETE /topics/1.json
+  swagger_api :destroy do
+    summary 'Destroys a topic'
+    param :path, :id, :integer, :required, "Topic id"
+    param :path, :course_id, :integer, :required, "Course id"
+    notes 'Notes...'
+  end
   def destroy
     @topic.destroy
     respond_to do |format|

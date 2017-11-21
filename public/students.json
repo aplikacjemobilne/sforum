@@ -67,6 +67,66 @@
           "method": "get"
         }
       ]
+    },
+    {
+      "path": "/students/{id}",
+      "operations": [
+        {
+          "summary": "Update a student",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Students id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "student[name]",
+              "type": "string",
+              "description": "Students name",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "student[index]",
+              "type": "string",
+              "description": "Students index",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "student[password]",
+              "type": "string",
+              "description": "Students password",
+              "required": true
+            }
+          ],
+          "nickname": "Students#update",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/students/{id}",
+      "operations": [
+        {
+          "summary": "Destroys a student",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Students id",
+              "required": true
+            }
+          ],
+          "notes": "Notes...",
+          "nickname": "Students#destroy",
+          "method": "delete"
+        }
+      ]
     }
   ],
   "authorizations": null

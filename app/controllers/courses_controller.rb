@@ -1,6 +1,15 @@
 class CoursesController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :set_course, only: [:show, :edit, :update, :destroy, :follow, :unfollow]
+  before_action :require_token, only: [:follow, :unfollow]
+  swagger_controller :courses, 'Courses'
 
+  swagger_api :follow do
+    summary 'Follows a course'
+    notes 'Notes...'
+    param :header, "Authorization", :string, :required, "Authentication token"
+    param :path, :id, :integer, :required, "Course id"
+  end
   def follow
     unless current_student.follows?(@course)
       current_student.courses.append(@course)
@@ -8,6 +17,12 @@ class CoursesController < ApplicationController
     redirect_to @course
   end
 
+  swagger_api :unfollow do
+    summary 'Unfollows a course'
+    notes 'Notes...'
+    param :header, "Authorization", :string, :required, "Authentication token"
+    param :path, :id, :integer, :required, "Course id"
+  end
   def unfollow
     if current_student.follows?(@course)
       @course.students.delete(current_student)
@@ -17,12 +32,21 @@ class CoursesController < ApplicationController
 
   # GET /courses
   # GET /courses.json
+  swagger_api :index do
+    summary 'Returns all courses'
+    notes 'Notes...'
+  end
   def index
     @courses = Course.all
   end
 
   # GET /courses/1
   # GET /courses/1.json
+  swagger_api :show do
+    summary 'Returns one course'
+    param :path, :id, :integer, :required, "Course id"
+    notes 'Notes...'
+  end
   def show
   end
 
@@ -37,6 +61,12 @@ class CoursesController < ApplicationController
 
   # POST /courses
   # POST /courses.json
+  swagger_api :create do
+    summary "Create a course"
+    param :form, "course[name]", :string, :required, "Course name"
+    param :form, "course[code]", :string, :required, "Course code"
+    param :form, "course[description]", :string, :required, "Course description"
+  end
   def create
     @course = Course.new(course_params)
 
@@ -53,6 +83,13 @@ class CoursesController < ApplicationController
 
   # PATCH/PUT /courses/1
   # PATCH/PUT /courses/1.json
+  swagger_api :update do
+    summary "Update a course"
+    param :path, :id, :integer, :required, "Course id"
+    param :form, "course[name]", :string, :required, "Course name"
+    param :form, "course[code]", :string, :required, "Course code"
+    param :form, "course[description]", :string, :required, "Course description"
+  end
   def update
     respond_to do |format|
       if @course.update(course_params)
@@ -67,6 +104,11 @@ class CoursesController < ApplicationController
 
   # DELETE /courses/1
   # DELETE /courses/1.json
+  swagger_api :destroy do
+    summary 'Destroys a course'
+    param :path, :id, :integer, :required, "Course id"
+    notes 'Notes...'
+  end
   def destroy
     @course.destroy
     respond_to do |format|

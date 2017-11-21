@@ -4,12 +4,24 @@
   "basePath": "http://localhost:3000",
   "apis": [
     {
+      "path": "/static.{format}",
+      "description": "Static"
+    },
+    {
       "path": "/sessions.{format}",
       "description": "Authentication"
     },
     {
+      "path": "/courses.{format}",
+      "description": "Courses"
+    },
+    {
       "path": "/students.{format}",
       "description": "Students"
+    },
+    {
+      "path": "/posts.{format}",
+      "description": "Posts"
     },
     {
       "path": "/topics.{format}",

@@ -56,6 +56,13 @@ class StudentsController < ApplicationController
 
   # PATCH/PUT /students/1
   # PATCH/PUT /students/1.json
+  swagger_api :update do
+    summary "Update a student"
+    param :path, :id, :integer, :required, "Students id"
+    param :form, "student[name]", :string, :required, "Students name"
+    param :form, "student[index]", :string, :required, "Students index"
+    param :form, "student[password]", :string, :required, "Students password"
+  end
   def update
     respond_to do |format|
       if @student.update(student_params)
@@ -70,6 +77,11 @@ class StudentsController < ApplicationController
 
   # DELETE /students/1
   # DELETE /students/1.json
+  swagger_api :destroy do
+    summary 'Destroys a student'
+    param :path, :id, :integer, :required, "Students id"
+    notes 'Notes...'
+  end
   def destroy
     @student.destroy
     respond_to do |format|
