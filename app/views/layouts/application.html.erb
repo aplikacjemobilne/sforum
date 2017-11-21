@@ -9,6 +9,13 @@
   </head>
 
   <body>
+    <% if logged_in? %>
+      Zalogowany jako <%= current_student.name %>
+      <%= link_to "Profil", current_student %>
+      <%= link_to "Wyloguj", logout_path, method: :delete %>
+    <% else %>
+      <%= link_to "Zaloguj", login_path %>
+    <% end %>
     <%= yield %>
   </body>
 </html>
