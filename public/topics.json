@@ -1,0 +1,42 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "http://localhost:3000",
+  "resourcePath": "topics",
+  "apis": [
+    {
+      "path": "/courses/{course_id}/topics",
+      "operations": [
+        {
+          "summary": "Create new topic",
+          "parameters": [
+            {
+              "paramType": "header",
+              "name": "Authorization",
+              "type": "string",
+              "description": "Authentication token",
+              "required": true
+            },
+            {
+              "paramType": "path",
+              "name": "course_id",
+              "type": "integer",
+              "description": "Course id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "topic[title]",
+              "type": "string",
+              "description": "Title of a topic",
+              "required": true
+            }
+          ],
+          "nickname": "Topics#create",
+          "method": "post"
+        }
+      ]
+    }
+  ],
+  "authorizations": null
+}

@@ -1,14 +1,25 @@
 class StudentsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :set_student, only: [:show, :edit, :update, :destroy]
+  swagger_controller :students, 'Students'
 
   # GET /students
   # GET /students.json
+  swagger_api :index do
+    summary 'Returns all students'
+    notes 'Notes...'
+  end
   def index
     @students = Student.all
   end
 
   # GET /students/1
   # GET /students/1.json
+  swagger_api :show do
+    summary 'Returns one student'
+    param :path, :id, :integer, :required, "Students id"
+    notes 'Notes...'
+  end
   def show
   end
 
@@ -23,6 +34,12 @@ class StudentsController < ApplicationController
 
   # POST /students
   # POST /students.json
+  swagger_api :create do
+    summary "Create a student"
+    param :form, "student[name]", :string, :required, "Students name"
+    param :form, "student[index]", :string, :required, "Students index"
+    param :form, "student[password]", :string, :required, "Students password"
+  end
   def create
     @student = Student.new(student_params)
 

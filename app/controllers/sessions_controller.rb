@@ -1,7 +1,16 @@
 class SessionsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  def new; end
+  swagger_controller :session, "Authentication"
 
+  def new
+
+  end
+
+  swagger_api :create do
+    summary "Gather a token"
+    param :form, "session[index]", :string, :required, "Students index"
+    param :form, "session[password]", :string, :required, "Students password"
+  end
   def create
     respond_to do |format|
       student = Student.find_by(index: params[:session][:index])

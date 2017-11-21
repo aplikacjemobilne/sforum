@@ -1,5 +1,8 @@
 class TopicsController < ApplicationController
   before_action :set_topic, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
+  before_action :require_token, only: [:create]
+  swagger_controller :topics, 'Topics'
 
   # GET /topics
   # GET /topics.json
@@ -24,6 +27,12 @@ class TopicsController < ApplicationController
 
   # POST /topics
   # POST /topics.json
+  swagger_api :create do
+    summary "Create new topic"
+    param :header, "Authorization", :string, :required, "Authentication token"
+    param :path, :course_id, :integer, :required, "Course id"
+    param :form, "topic[title]", :string, :required, "Title of a topic"
+  end
   def create
     @course = Course.find(params[:course_id])
     @topic = @course.topics.new(topic_params)
@@ -32,7 +41,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       if @topic.save
         format.html { redirect_to [@course, @topic], notice: 'Topic was successfully created.' }
-        format.json { render :show, status: :created, location: @topic }
+        format.json { render :show, status: :created }
       else
         format.html { render :new }
         format.json { render json: @topic.errors, status: :unprocessable_entity }
