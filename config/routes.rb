@@ -5,8 +5,13 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
 
-  resources :posts
-  resources :topics
-  resources :courses
+  get '/courses/:id/follow', to: 'courses#follow'
+  get '/courses/:id/unfollow', to: 'courses#unfollow'
+
   resources :students
+  resources :courses do
+    resources :topics, only: [:new, :create, :edit, :update, :show, :destroy] do
+      resources :posts, only: [:new, :create, :edit, :update, :show, :destroy]
+    end
+  end
 end

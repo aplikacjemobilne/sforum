@@ -14,7 +14,9 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
-    @post = Post.new
+    @course = Course.find(params[:course_id])
+    @topic = Topic.find(params[:topic_id])
+    @post = @topic.posts.new
   end
 
   # GET /posts/1/edit
@@ -24,11 +26,14 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(post_params)
+    @course = Course.find(params[:course_id])
+    @topic = Topic.find(params[:topic_id])
+    @post = @topic.posts.new(post_params)
+    @post.student = current_student
 
     respond_to do |format|
       if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
+        format.html { redirect_to [@course, @topic], notice: 'Post was successfully created.' }
         format.json { render :show, status: :created, location: @post }
       else
         format.html { render :new }
@@ -41,12 +46,12 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1.json
   def update
     respond_to do |format|
-      if @post.update(post_params)
-        format.html { redirect_to @post, notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @post }
+      if @post.update(topic_params)
+        format.html { redirect_to [@course, @topic], notice: 'Topic was successfully updated.' }
+        format.json { render :show, status: :ok, location: @topic }
       else
         format.html { render :edit }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+        format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -64,6 +69,8 @@ class PostsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
+      @course = Course.find(params[:course_id])
+      @topic = Topic.find(params[:topic_id])
       @post = Post.find(params[:id])
     end
 

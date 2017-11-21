@@ -8,10 +8,20 @@ cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 
-<ul>
-<% @students.each do |student| %>
-  <%= link_to student do %>
-    <li><%= student.name %> <%= student.index %></li>
+<% if logged_in? %>
+  <h2>Moje kursy</h2>
+  <% current_student.courses.each do |course| %>
+    <h3><%= course.name %></h3>
+    <% course.topics.each do |topic| %>
+      <h4><%= topic.title %> by <%= topic.student.name %></h4>
+      <% topic.posts.each do |post| %>
+        <p>
+          <%= post.body %>
+        </p>
+        <h6>by <%= post.student.name %></h6>
+      <% end %>
+    <% end %>
   <% end %>
+<% else %>
+  Nie jesteś zalogowany.
 <% end %>
-</ul>

@@ -1,19 +1,46 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @course.name %>
-</p>
+<h1><%= @course.name %></h1>
+<h4><%= @course.code %></h4>
+<p><%= @course.description %></p>
 
-<p>
-  <strong>Code:</strong>
-  <%= @course.code %>
-</p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @course.description %>
-</p>
+<% if logged_in? %>
+  <% unless current_student.follows?(@course) %>
+    <%= link_to( "Zapisz się do kursu", action: :follow) %>
+  <% else %>
+    <%= link_to( "Wypisz się z kursu", action: :unfollow) %>
+  <% end %>
+<% end %>
 
-<%= link_to 'Edit', edit_course_path(@course) %> |
-<%= link_to 'Back', courses_path %>
+<hr>
+<h1>Zapisani studenci</h1>
+<ul>
+<% @course.students.each do |student| %>
+  <li><%= link_to student.name, student %></li>
+<% end %>
+</ul>
+
+<hr>
+<h1>Lista tematów</h1>
+<% if @course.topics.length == 0 %>
+  Nie ma żadnego tematu
+<% else %>
+  <% @course.topics.each do |topic| %>
+    <%= link_to [@course, topic] do %>
+    <h4><%= topic.title %> by <%= topic.student.name %></h4>
+    <% end %>
+    <% topic.posts.each do |post| %>
+      <p>
+        <%= post.body %>
+      </p>
+      <h6>by <%= post.student.name %></h6>
+    <% end %>
+  <% end %>
+<% end %>
+
+<hr>
+
+<% if logged_in? && current_student.follows?(@course) %>
+  <%= link_to "Dodaj temat", new_course_topic_path(@course) %>
+<% end %>
